@@ -9,6 +9,14 @@ class GetVideosUseCaseImpl @Inject constructor(
 ) : GetVideosUseCase {
 
     override suspend operator fun invoke(): List<Video> {
-        return videoRepository.getVideos()
+
+        return try {
+            val videos = videoRepository.getVideosFromApi()
+            videoRepository.saveVideos(videos)
+            videos
+        } catch (e: Exception) {
+            videoRepository.getVideosFromDb()
+        }
+
     }
 }

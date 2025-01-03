@@ -14,15 +14,9 @@ class VideoRepositoryImpl(
     private val videoDao: VideoDao
 ) : VideoRepository {
 
-    override suspend fun getVideos(): List<Video> {
-        return try {
-            val response = videoApi.getVideos()
-            val videos = parseVideoResponse(response)
-            saveVideos(videos)
-            videos
-        } catch (e: Exception) {
-            getVideosFromDb()
-        }
+    override suspend fun getVideosFromApi(): List<Video> {
+        val response = videoApi.getVideos()
+        return parseVideoResponse(response)
     }
 
     override suspend fun saveVideos(videos: List<Video>) {
